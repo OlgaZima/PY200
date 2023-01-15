@@ -27,6 +27,7 @@ class Book:
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(id = {self.id}, name='{self.name}', pages={self.pages})"
 
+
 # TODO написать класс Library
 
 
@@ -37,23 +38,32 @@ class Library:
         self.books = books
 
     def get_next_book_id(self):
-        if isinstance(self.books, type(None)):
+        count = 0
+        if not self.books:
             return 1
         else:
-            return len(self.books) + 1
-
-    def __repr__(self) -> str:
-        return f"({self.books})"
+            for i in self.books:
+                count += 1
+                if count == len(self.books):
+                    return i.id + 1
 
     def get_index_by_book_id(self, num: int):
-        if self.books:
-            res = 0
+        count = 0
+        if not self.books:
+            raise ValueError("Библиотека пустая")
+        else:
             for i in self.books:
+                count += 1
                 if i.id == num:
-                    res = 1
-                    return i.id - 1
-            if res == 0:
+                    return count - 1
+            else:
                 raise ValueError("Книги с запрашиваемым id не существует")
+
+    """def get_index_by_book_id(self, num: int):
+        for i, elem in enumerate(self.books):
+            if elem.id == num:
+                return i
+        raise ValueError("Книги с запрашиваемым id не существует")"""
 
 
 if __name__ == '__main__':
