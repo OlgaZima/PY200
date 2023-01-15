@@ -56,8 +56,7 @@ class Library:
                 count += 1
                 if i.id == num:
                     return count - 1
-            else:
-                raise ValueError("Книги с запрашиваемым id не существует")
+            raise ValueError("Книги с запрашиваемым id не существует")
 
     """def get_index_by_book_id(self, num: int):
         for i, elem in enumerate(self.books):
@@ -74,4 +73,5 @@ if __name__ == '__main__':
     ]
     library_with_books = Library(books=list_books)  # инициализируем библиотеку с книгами
     print(library_with_books.get_next_book_id())  # проверяем следующий id для непустой библиотеки
-    print(library_with_books.get_index_by_book_id(1))  # проверяем индекс книги с id = 1
+    library_with_books = Library()
+    print(library_with_books.get_index_by_book_id(9))  # проверяем индекс книги с id = 1
