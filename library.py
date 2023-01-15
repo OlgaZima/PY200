@@ -38,14 +38,10 @@ class Library:
         self.books = books
 
     def get_next_book_id(self):
-        count = 0
         if not self.books:
             return 1
         else:
-            for i in self.books:
-                count += 1
-                if count == len(self.books):
-                    return i.id + 1
+            return self.books[-1].id + 1
 
     def get_index_by_book_id(self, num: int):
         count = 0
@@ -58,12 +54,6 @@ class Library:
                     return count - 1
             raise ValueError("Книги с запрашиваемым id не существует")
 
-    """def get_index_by_book_id(self, num: int):
-        for i, elem in enumerate(self.books):
-            if elem.id == num:
-                return i
-        raise ValueError("Книги с запрашиваемым id не существует")"""
-
 
 if __name__ == '__main__':
     empty_library = Library()  # инициализируем пустую библиотеку
@@ -73,5 +63,4 @@ if __name__ == '__main__':
     ]
     library_with_books = Library(books=list_books)  # инициализируем библиотеку с книгами
     print(library_with_books.get_next_book_id())  # проверяем следующий id для непустой библиотеки
-    library_with_books = Library()
-    print(library_with_books.get_index_by_book_id(9))  # проверяем индекс книги с id = 1
+    print(library_with_books.get_index_by_book_id(1))  # проверяем индекс книги с id = 1
