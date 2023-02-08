@@ -109,7 +109,7 @@ class Film_online(Film, CheckFilm, UpdateFilm):
         print(f'Фильм {self.title} доступен для просмотра в течение{self.period} дней')
 
 
-class Film_download(Film):
+class Film_download(Film, CheckFilm, UpdateFilm):
     def __init__(self, title: str, quality: str, size: float, rating: float, link='www.example.com/film/'):
         super().__init__(title, quality, size, rating)
         self.link = link
