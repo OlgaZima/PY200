@@ -34,7 +34,7 @@ class User(ABC):
         return f'Пользователь {self.login}. Номер {self.phone}'
 
 
-class User_const(User, CheckAge, CheckDiscount, ABC):
+class User_const(User, CheckAge, CheckDiscount):
     def __init__(self, login: str, phone: int):
         super().__init__(login, phone)
 
@@ -45,11 +45,10 @@ class User_const(User, CheckAge, CheckDiscount, ABC):
         return 'Скидка постоянного пользователя составляет 25 %'
 
 
-class User_occasional(User, CheckAge, CheckDiscount, ABC):
-    def __init__(self, login: str, phone: int, age: int, discount=1.0):
+class User_occasional(User, CheckAge):
+    def __init__(self, login: str, phone: int, age: int):
         super().__init__(login, phone)
         self.age = age
-        self.discount = discount
 
     @property
     def age(self):
@@ -69,14 +68,14 @@ class User_occasional(User, CheckAge, CheckDiscount, ABC):
         if self.age >= 18:
             return f'Уважаемый, {self.login}, вам доступны любые фильмы'
 
-    def check_discount(self):
-        return f'Скидки пока нет'
+    # def check_discount(self):
+    #     pass
 
     def __str__(self) -> str:
         return f'{self.login}, {self.phone}, {self._age}'
 
 
-class User_free(User, CheckAge, CheckDiscount, ABC):
+class User_free(User, CheckAge, CheckDiscount):
     def __init__(self, login: str, phone: int):
         super().__init__(login, phone)
 
@@ -87,7 +86,7 @@ class User_free(User, CheckAge, CheckDiscount, ABC):
         return f'Уважаемый, {self.login}, как сотруднику компании, все фильмы для вас бесплатны'
 
 
-class Film:
+class Film(ABC):
     def __init__(self, title: str, quality: str, size: float, rating: float):
         self.title = title
         self.quality = quality
@@ -98,7 +97,7 @@ class Film:
         return f'{self.title}, {self.quality}, {self.size}, {self.rating}'
 
 
-class Film_online(Film, CheckFilm, UpdateFilm, ABC):
+class Film_online(Film, CheckFilm, UpdateFilm):
     def __init__(self, title: str, quality: str, size: float, rating: float, period=30):
         super().__init__(title, quality, size, rating)
         self.period = period
@@ -151,7 +150,7 @@ class User_repository:
             return f'Пользователь {i.login}. Номер {i.phone}. Возраст {i.age}'
 
 
-class Order(CheckAge, CheckDiscount, ABC):
+class Order:
     def __init__(self, order_id, login, title):
         self.order_id = order_id
         self.login = login
@@ -161,7 +160,7 @@ class Order(CheckAge, CheckDiscount, ABC):
         return f'Номер заказа {self.order_id}. Пользователь {self.login}. Фильм {self.title}'
 
 
-class Order_repository:
+class Order_repository(CheckAge, CheckDiscount):
     def __init__(self):
         self.orders = []
 
@@ -214,7 +213,8 @@ if __name__ == "__main__":
     order.add_orders(order3)
     order.del_all_orders('Zima')
     film = Film_download('Night', 'HD', 10.2, 9.9)
-    film.update('jhjhjh')
+    film = Film_download('Night', 'HD', 10.2, 9.9)
+    film.update('www.example.com/film_rep/')
     print(film.link)
 
 
