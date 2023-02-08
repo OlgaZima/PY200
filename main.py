@@ -26,6 +26,7 @@ class UpdateFilm:
 
 
 class User(ABC):
+
     def __init__(self, login: str, phone: int):
         self.login = login
         self.phone = phone
@@ -35,11 +36,28 @@ class User(ABC):
 
 
 class User_const(User, CheckAge, CheckDiscount):
-    def __init__(self, login: str, phone: int):
+    def __init__(self, login: str, phone: int, age: int, discount=0.25):
         super().__init__(login, phone)
+        self.age = age
+        self.discount = discount
+
+    @property
+    def age(self):
+        return self._age
+
+    @age.setter
+    def age(self, age_):
+        if not isinstance(age_, int):
+            raise TypeError()
+        if age_ < 3 or age_ > 150:
+            raise ValueError()
+        self._age = age_
 
     def check_age(self):
-        return f'Уважаемый, {self.login}, вам доступны все фильмы'
+        if self.age < 18:
+            return f'Уважаемый, {self.login}, некоторые фильмы недоступны для вас'
+        if self.age >= 18:
+            return f'Уважаемый, {self.login}, вам доступны любые фильмы'
 
     def check_discount(self):
         return 'Скидка постоянного пользователя составляет 25 %'
@@ -68,9 +86,6 @@ class User_occasional(User, CheckAge):
         if self.age >= 18:
             return f'Уважаемый, {self.login}, вам доступны любые фильмы'
 
-    # def check_discount(self):
-    #     pass
-
     def __str__(self) -> str:
         return f'{self.login}, {self.phone}, {self._age}'
 
@@ -92,6 +107,10 @@ class Film(ABC):
         self.quality = quality
         self.size = size
         self.rating = rating
+
+    @staticmethod
+    def check_id(f1, f2):
+        return f1.title == f2.title and f1.quality == f2.quality and f1.size == f2.size
 
     def __str__(self) -> str:
         return f'{self.title}, {self.quality}, {self.size}, {self.rating}'
@@ -121,12 +140,14 @@ class Film_download(Film, CheckFilm, UpdateFilm):
         print(f'Фильм {self.title} доступен для просмотра по ссылке {self.link}')
 
 
-class User_repository:
+class User_repository(CheckAge, CheckDiscount):
     def __init__(self):
+        self.count = 0
         self.users = []
 
     def add_users(self, user_):
         self.users.append(user_)
+        self.count += 1
 
     def del_users(self, login_, phone_):
         for i in self.users:
@@ -196,13 +217,14 @@ class Order_repository(CheckAge, CheckDiscount):
 
 if __name__ == "__main__":
     user = User_repository()
-    user1 = User_const("Zima", 1234)
+    user1 = User_const("Zima", 1234, 25)
     print(user1.check_age())
     user2 = User_free("Leto", 1234)
     user3 = User_occasional("Spring", 1234, 17)
     user.add_users(user1)
     user.add_users(user2)
     user.add_users(user3)
+    print(user.count)
     print(user.check_discount('Leto'))
     order = Order_repository()
     order1 = Order(1, 'Spring', 'Happy')
@@ -213,9 +235,9 @@ if __name__ == "__main__":
     order.add_orders(order3)
     order.del_all_orders('Zima')
     film = Film_download('Night', 'HD', 10.2, 9.9)
-    film = Film_download('Night', 'HD', 10.2, 9.9)
+    film1 = Film_download('Night', 'HD', 10.2, 9.9)
     film.update('www.example.com/film_rep/')
-    print(film.link)
+    print(film.check_id(film, film1))
 
 
 
