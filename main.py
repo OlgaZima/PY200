@@ -217,7 +217,7 @@ class Order_repository(CheckAge, CheckDiscount):
 
 if __name__ == "__main__":
     user = User_repository()
-    user1 = User_const("Zima", 1234, 25)
+    user1 = User_const("Zima", 1234, 17)
     print(user1.check_age())
     user2 = User_free("Leto", 1234)
     user3 = User_occasional("Spring", 1234, 17)
@@ -234,9 +234,13 @@ if __name__ == "__main__":
     order.add_orders(order2)
     order.add_orders(order3)
     order.del_all_orders('Zima')
+    print(order)
+    print(order.check_age('Zima'))
     film = Film_download('Night', 'HD', 10.2, 9.9)
     film1 = Film_download('Night', 'HD', 10.2, 9.9)
     film.update('www.example.com/film_rep/')
+    print(film.link)
+
     print(film.check_id(film, film1))
 
 
